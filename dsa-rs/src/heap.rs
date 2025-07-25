@@ -50,11 +50,7 @@ impl<T: PartialOrd + Clone + Debug> PriorityQueue<T> {
             let parent = self.parent(index);
 
             // swap between parent & child
-            let temp_one = self.heap[parent].clone();
-            let temp_two = self.heap[index].clone();
-
-            self.heap[parent] = temp_two;
-            self.heap[index] = temp_one;
+            self.heap.swap(parent, index);
 
             index = self.parent(index);
         }
@@ -65,11 +61,7 @@ impl<T: PartialOrd + Clone + Debug> PriorityQueue<T> {
             let parent = self.parent(index);
 
             // swap between parent & child
-            let temp_one = self.heap[parent].clone();
-            let temp_two = self.heap[index].clone();
-
-            self.heap[parent] = temp_two;
-            self.heap[index] = temp_one;
+            self.heap.swap(parent, index);
 
             index = self.parent(index);
         }
@@ -114,43 +106,35 @@ impl<T: PartialOrd + Clone + Debug> PriorityQueue<T> {
                 break;
             }
 
-            let temp_one = self.heap[largest].clone();
-            let temp_two = self.heap[index].clone();
-
-            self.heap[largest] = temp_two;
-            self.heap[index] = temp_one;
+            self.heap.swap(largest, index);
 
             index = largest;
         }
     }
 
     fn min_heapify_down(&mut self, mut index: usize) {
-        let mut largest = index;
+        let mut smallest = index;
         let heap_size = self.heap.len();
 
         loop {
             let left = self.left_child(index);
             let right = self.right_child(index);
 
-            if left < heap_size && self.heap[left] < self.heap[largest] {
-                largest = left;
+            if left < heap_size && self.heap[left] < self.heap[smallest] {
+                smallest = left;
             }
 
-            if right < heap_size && self.heap[right] < self.heap[largest] {
-                largest = right;
+            if right < heap_size && self.heap[right] < self.heap[smallest] {
+                smallest = right;
             }
 
-            if largest == index {
+            if smallest == index {
                 break;
             }
 
-            let temp_one = self.heap[largest].clone();
-            let temp_two = self.heap[index].clone();
+            self.heap.swap(smallest, index);
 
-            self.heap[largest] = temp_two;
-            self.heap[index] = temp_one;
-
-            index = largest;
+            index = smallest;
         }
     }
 
